@@ -1,0 +1,15 @@
+Table queries {
+  id int [pk]
+  query varchar(255) [not null]
+}
+
+Table details {
+  id int [pk]
+  query_id int [not null]
+  document varchar(255) [not null]
+  label int(8) [not null]
+  score double [not null]
+  pembimbing varchar(255) [not null]
+}
+
+Ref: details.query_id > queries.id
