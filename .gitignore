@@ -1,0 +1,11 @@
+# Created by https://www.gitignore.io/api/osx,venv,macos,linux,python,django,pycharm,virtualenv
+
+### Flask ###
+__pycache__/
+venv/
+.idea
+app/db/dataset-pre.xlsx
+app/db/datasets.xlsx
+migrations/
+.ipynb_checkpoints/
+.pyc
