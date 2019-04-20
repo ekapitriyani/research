@@ -27,8 +27,13 @@ def search():
             queries = pd.read_excel("app/tmp/queries.xlsx")
             queries = queries["Queries"].values
 
-        # Check in database based query if exists
+        # Preproces queries
+        queriesPre = list()
         for query in queries:
+            queriesPre.append(preprocess(query))
+
+        # Cek di database apakah ada data dengan query pada inputan ataupun file
+        for query in queriesPre:
             data = Queries.findByQueryName(query)
             if data is not None:
                 response.append(data)
@@ -44,17 +49,18 @@ def search():
                 engine.addDocument(doc)
                 documentsName.append("Document_{}".format(i + 1))
 
-            for query in queries:
+            for query in queriesPre:
                 engine.setQuery(query)  # Set query pencarian
 
             titlesScores = engine.process_score()
             ScoreDf = (pd.DataFrame(titlesScores)).T
-            ScoreDf.columns = queries
+            ScoreDf.columns = queriesPre
             ScoreDf["Documents"] = documentsName
             ScoreDf["Pembimbing"] = dataset["Pembimbing"].values
 
             dfListed = list()
-            for i in queries:
+            for i in queriesPre:
+                print(i)
                 labels = list()
                 for j in ScoreDf[i]:
                     if j > 0.000:
@@ -68,18 +74,18 @@ def search():
                 dfListed.append(datadf.sort_values(by=[i], ascending=False))
 
             for i, df in enumerate(dfListed):
-                dbQuery = Queries(queries[i])
+                dbQuery = Queries(queriesPre[i])
                 for j in range(len(df["Documents"])):
                     document = df["Documents"][j]
                     label = int(df["Labels"][j])
-                    score = float(df[queries[i]][j])
+                    score = float(df[queriesPre[i]][j])
                     pembimbing = df["Pembimbing"][j]
                     data = document, label, score, pembimbing
                     details = Details(data)
                     dbQuery.details.append(details)
                 dbQuery.save()
 
-            for query in queries:
+            for query in queriesPre:
                 data = Queries.findByQueryName(query)
                 response.append(data)
 
