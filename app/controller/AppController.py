@@ -21,11 +21,20 @@ def search():
 
         if 'q' in request.args:
             queries = [request.args['q']]
-        else:
+        elif "files" in request.files:
             file = request.files["files"]
             file.save(os.path.join("app/tmp", "queries.xlsx"))
             queries = pd.read_excel("app/tmp/queries.xlsx")
             queries = queries["Queries"].values
+        else:
+            resp = {
+                "error": "invalid request",
+                "path": "/search",
+                "message": "request should be query or files"
+            }
+            resp = jsonify(resp)
+            resp.status_code = 400
+            return resp
 
         # Preproces queries
         queriesPre = list()
