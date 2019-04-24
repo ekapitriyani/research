@@ -9,21 +9,23 @@ class Details(db.Model):
     label = db.Column(db.Integer, nullable=False)
     score = db.Column(db.Float, nullable=False)
     pembimbing = db.Column(db.String, nullable=False)
+    judul = db.Column(db.String, nullable=False)
     query_id = db.Column(db.Integer, db.ForeignKey("queries.id"))
 
     def __init__(self, data):
-        document, label, score, pembimbing = data
+        document, label, score, pembimbing, judul = data
         self.document = document
         self.label = label
         self.score = score
         self.pembimbing = pembimbing
+        self.judul = judul
 
     def __repr__(self):
         return "<Pembimbing: {}>".format(self.pembimbing)
 
     @staticmethod
     def getAll(queryId):
-        details = Details.query.filter_by(query_id=queryId).order_by(Details.score.desc()).all()
+        details = Details.query.filter_by(query_id=queryId).order_by(Details.score.desc()).limit(5).all()
         result = list()
         for data in details:
             obj = {
@@ -31,7 +33,8 @@ class Details(db.Model):
                 "document": data.document,
                 "label": data.label,
                 "score": data.score,
-                "pembimbing": data.pembimbing
+                "pembimbing": data.pembimbing,
+                "judul": data.judul
             }
             result.append(obj)
         return result
