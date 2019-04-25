@@ -3,7 +3,7 @@ from app import app
 from app.constant import RequestMethod
 from app.model.QueriesModel import Queries
 from app.model.DetailsModel import Details
-from app.module.Engine import stemmerEN, preprocess, Engine
+from app.module.Engine import preprocess, Engine
 import pandas as pd
 import os
 
