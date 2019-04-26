@@ -10,6 +10,7 @@ Table details {
   label int(8) [not null]
   score double [not null]
   pembimbing varchar(255) [not null]
+  judul varchar(255) [not null]
 }
 
 Ref: details.query_id > queries.id
